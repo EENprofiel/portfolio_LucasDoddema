@@ -46,9 +46,5 @@ app.*.map.json
 node_modules/
 package-lock.json
 
-# Original HTML files (keeping for reference)
-# Uncomment these lines if you want to keep the original files
-# index.html
-# src/
-# tailwind.config.js
-# package.json
+# Archive - keep original files for reference
+!archive/

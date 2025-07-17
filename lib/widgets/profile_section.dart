@@ -47,56 +47,18 @@ class ProfileSection extends StatelessWidget {
           // Social Links
           Row(
             children: [
-              _buildSocialIcon(
+              _SocialIcon(
                 onTap: () => _launchUrl('https://github.com/EENprofiel'),
-                icon: _buildGitHubIcon(),
+                icon: Icons.code,
               ),
               const SizedBox(width: 12),
-              _buildSocialIcon(
+              _SocialIcon(
                 onTap: () => _launchUrl('https://www.linkedin.com/in/lucas-doddema'),
-                icon: _buildLinkedInIcon(),
+                icon: Icons.business,
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon({required VoidCallback onTap, required Widget icon}) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedScale(
-          scale: 1.0,
-          duration: const Duration(milliseconds: 200),
-          child: icon,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGitHubIcon() {
-    return SizedBox(
-      width: 24,
-      height: 24,
-      child: Icon(
-        Icons.code,
-        color: const Color(0xFF94a3b8),
-        size: 24,
-      ),
-    );
-  }
-
-  Widget _buildLinkedInIcon() {
-    return SizedBox(
-      width: 24,
-      height: 24,
-      child: Icon(
-        Icons.business,
-        color: const Color(0xFF94a3b8),
-        size: 24,
       ),
     );
   }
@@ -106,5 +68,57 @@ class ProfileSection extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+}
+
+class _SocialIcon extends StatefulWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+
+  const _SocialIcon({
+    required this.onTap,
+    required this.icon,
+  });
+
+  @override
+  State<_SocialIcon> createState() => _SocialIconState();
+}
+
+class _SocialIconState extends State<_SocialIcon> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          transform: Matrix4.identity()
+            ..translate(0.0, _isHovered ? -2.0 : 0.0)
+            ..scale(_isHovered ? 1.1 : 1.0),
+          child: Container(
+            width: 24,
+            height: 24,
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: _isHovered 
+                  ? const Color(0xFFe2e8f0) 
+                  : const Color(0xFF94a3b8),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Icon(
+              widget.icon,
+              color: _isHovered ? const Color(0xFF1f2937) : Colors.white,
+              size: 16,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
